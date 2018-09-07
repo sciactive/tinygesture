@@ -51,11 +51,16 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => target.style.transform = null, 1000);
   });
 
+  let tapTimeout;
   gesture.on('tap', () => {
     target.style.transform = 'perspective(1000px) translate3d(0, 0, 100px)';
+    tapTimeout = setTimeout(() => target.style.transform = null, 300);
+  });
+  gesture.on('doubletap', () => {
+    target.style.transform = 'perspective(1000px) translate3d(0, 0, 400px)';
+    clearTimeout(tapTimeout);
     setTimeout(() => target.style.transform = null, 300);
   });
-
   gesture.on('longpress', () => {
     bgColor = '#666688';
     target.style.backgroundColor = bgColor;

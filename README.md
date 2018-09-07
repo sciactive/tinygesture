@@ -1,6 +1,6 @@
 # TinyGesture.js
 
-Very small gesture recognizer for JavaScript. Swipe, pan, tap, and longpress.
+Very small gesture recognizer for JavaScript. Swipe, pan, tap, doubletap, and longpress.
 
 ## Installation
 
@@ -150,6 +150,11 @@ gesture.on('tap', event => {
   // The gesture was a tap. Keep in mind, it may have also been a long press.
 });
 
+gesture.on('doubletap', event => {
+  // The gesture was a double tap. The 'tap' event will also have been fired on
+  // the first tap.
+});
+
 gesture.on('longpress', event => {
   // The gesture is currently ongoing, and is now a long press.
 });
@@ -172,7 +177,7 @@ gesture.off('tap', callback);
 ```js
 // If, for some reason, you want to programmatically fire all the listeners for
 // some event:
-gesture.fire('tap', someEvent);
+gesture.fire('tap', eventObj);
 ```
 
 ### Destruction

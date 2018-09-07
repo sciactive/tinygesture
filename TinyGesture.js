@@ -18,6 +18,8 @@ export default class TinyGesture {
     this.diagonalSwipes = options.diagonalSwipes;
     this.diagonalLimit = options.diagonalLimit;
     this.mouseSupport = options.mouseSupport;
+    this.longPressTime = options.longPressTime;
+    this.doubleTapTime = options.doubleTapTime;
     this.touchStartX = null;
     this.touchStartY = null;
     this.touchEndX = null;
@@ -25,6 +27,7 @@ export default class TinyGesture {
     this.velocityX = null;
     this.velocityY = null;
     this.longPressTimer = null;
+    this.doubleTapWaiting = false;
     this.handlers = {
       'panstart': [],
       'panmove': [],
@@ -34,6 +37,7 @@ export default class TinyGesture {
       'swipeup': [],
       'swipedown': [],
       'tap': [],
+      'doubletap': [],
       'longpress': []
     };
 
@@ -45,7 +49,7 @@ export default class TinyGesture {
     this.element.addEventListener('touchmove', this._onTouchMove, passiveIfSupported);
     this.element.addEventListener('touchend', this._onTouchEnd, passiveIfSupported);
 
-    if (this.mouseSupport) {
+    if (this.mouseSupport && !('ontouchstart' in window)) {
       this.element.addEventListener('mousedown', this._onTouchStart, passiveIfSupported);
       document.addEventListener('mousemove', this._onTouchMove, passiveIfSupported);
       document.addEventListener('mouseup', this._onTouchEnd, passiveIfSupported);
@@ -100,7 +104,7 @@ export default class TinyGesture {
     this.touchEndX = null;
     this.touchEndY = null;
     // Long press.
-    this.longPressTimer = setTimeout(() => this.fire('longpress', event), 500);
+    this.longPressTimer = setTimeout(() => this.fire('longpress', event), this.longPressTime);
     this.fire('panstart', event);
   }
 
@@ -169,7 +173,15 @@ export default class TinyGesture {
       }
     } else if (Math.abs(x) < this.pressThreshold && Math.abs(y) < this.pressThreshold) {
       // Tap.
-      this.fire('tap', event);
+      if (this.doubleTapWaiting) {
+        this.doubleTapWaiting = false;
+        clearTimeout(this.doubleTapTimer);
+        this.fire('doubletap', event);
+      } else {
+        this.doubleTapWaiting = true;
+        this.doubleTapTimer = setTimeout(() => this.doubleTapWaiting = false, this.doubleTapTime);
+        this.fire('tap', event);
+      }
     }
   }
 }
@@ -181,6 +193,8 @@ TinyGesture.defaults = {
   pressThreshold: 8,
   diagonalSwipes: false,
   diagonalLimit: Math.tan(45 * 1.5 / 180 * Math.PI),
+  longPressTime: 500,
+  doubleTapTime: 300,
   mouseSupport: true
 };
 
