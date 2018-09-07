@@ -2,11 +2,19 @@
 
 Very small gesture recognizer for JavaScript. Swipe, pan, tap, and longpress.
 
+## Installation
+
+```sh
+npm install --save tinygesture
+```
+
 ## Usage
 
 ### Constructor and Options
 
 ```js
+import TinyGesture from 'tinygesture';
+
 // Options object is optional. These are the defaults.
 const options = {
   // Used to calculate the threshold to consider a movement a swipe. it is
@@ -46,7 +54,7 @@ const options = {
 };
 
 const target = document.getElementById('target');
-const gesture = new TineGesture(target, options);
+const gesture = new TinyGesture(target, options);
 ```
 
 ### Listening to Gesture Events
