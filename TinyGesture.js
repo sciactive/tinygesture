@@ -11,15 +11,7 @@ export default class TinyGesture {
   constructor (element, options) {
     options = Object.assign({}, TinyGesture.defaults, options);
     this.element = element;
-    this.threshold = options.threshold;
-    this.velocityThreshold = options.velocityThreshold;
-    this.disregardVelocityThreshold = options.disregardVelocityThreshold;
-    this.pressThreshold = options.pressThreshold;
-    this.diagonalSwipes = options.diagonalSwipes;
-    this.diagonalLimit = options.diagonalLimit;
-    this.mouseSupport = options.mouseSupport;
-    this.longPressTime = options.longPressTime;
-    this.doubleTapTime = options.doubleTapTime;
+    this.opts = options;
     this.touchStartX = null;
     this.touchStartY = null;
     this.touchEndX = null;
@@ -49,7 +41,7 @@ export default class TinyGesture {
     this.element.addEventListener('touchmove', this._onTouchMove, passiveIfSupported);
     this.element.addEventListener('touchend', this._onTouchEnd, passiveIfSupported);
 
-    if (this.mouseSupport && !('ontouchstart' in window)) {
+    if (this.opts.mouseSupport && !('ontouchstart' in window)) {
       this.element.addEventListener('mousedown', this._onTouchStart, passiveIfSupported);
       document.addEventListener('mousemove', this._onTouchMove, passiveIfSupported);
       document.addEventListener('mouseup', this._onTouchEnd, passiveIfSupported);
@@ -64,6 +56,7 @@ export default class TinyGesture {
     document.removeEventListener('mousemove', this._onTouchMove);
     document.removeEventListener('mouseup', this._onTouchEnd);
     clearTimeout(this.longPressTimer);
+    clearTimeout(this.doubleTapTimer);
   }
 
   on (type, fn) {
@@ -93,10 +86,10 @@ export default class TinyGesture {
   }
 
   onTouchStart (event) {
-    this.thresholdX = this.threshold('x', this);
-    this.thresholdY = this.threshold('y', this);
-    this.disregardVelocityThresholdX = this.disregardVelocityThreshold('x', this);
-    this.disregardVelocityThresholdY = this.disregardVelocityThreshold('y', this);
+    this.thresholdX = this.opts.threshold('x', this);
+    this.thresholdY = this.opts.threshold('y', this);
+    this.disregardVelocityThresholdX = this.opts.disregardVelocityThreshold('x', this);
+    this.disregardVelocityThresholdY = this.opts.disregardVelocityThreshold('y', this);
     this.touchStartX = (event.type === 'mousedown' ? event.screenX : event.changedTouches[0].screenX);
     this.touchStartY = (event.type === 'mousedown' ? event.screenY : event.changedTouches[0].screenY);
     this.touchMoveX = null;
@@ -104,7 +97,7 @@ export default class TinyGesture {
     this.touchEndX = null;
     this.touchEndY = null;
     // Long press.
-    this.longPressTimer = setTimeout(() => this.fire('longpress', event), this.longPressTime);
+    this.longPressTimer = setTimeout(() => this.fire('longpress', event), this.opts.longPressTime);
     this.fire('panstart', event);
   }
 
@@ -125,7 +118,7 @@ export default class TinyGesture {
     this.swipingDirection = absTouchMoveX > absTouchMoveY
       ? (this.swipingHorizontal ? 'horizontal' : 'pre-horizontal')
       : (this.swipingVertical ? 'vertical' : 'pre-vertical');
-    if (Math.max(absTouchMoveX, absTouchMoveY) > this.pressThreshold) {
+    if (Math.max(absTouchMoveX, absTouchMoveY) > this.opts.pressThreshold) {
       clearTimeout(this.longPressTimer);
     }
     this.fire('panmove', event);
@@ -141,19 +134,22 @@ export default class TinyGesture {
     clearTimeout(this.longPressTimer);
 
     const x = this.touchEndX - this.touchStartX;
+    const absX = Math.abs(x);
     const y = this.touchEndY - this.touchStartY;
-    if (Math.abs(x) > this.thresholdX || Math.abs(y) > this.thresholdY) {
-      this.swipedHorizontal = this.diagonalSwipes ? Math.abs(x / y) <= this.diagonalLimit : Math.abs(x) >= Math.abs(y);
-      this.swipedVertical = this.diagonalSwipes ? Math.abs(y / x) <= this.diagonalLimit : Math.abs(y) > Math.abs(x);
+    const absY = Math.obs(y);
+    debugger;
+    if (absX > this.thresholdX || absY > this.thresholdY) {
+      this.swipedHorizontal = this.opts.diagonalSwipes ? Math.abs(x / y) <= this.opts.diagonalLimit : absX >= absY && absX > this.thresholdX;
+      this.swipedVertical = this.opts.diagonalSwipes ? Math.abs(y / x) <= this.opts.diagonalLimit : absY > absX && absX > this.thresholdY;
       if (this.swipedHorizontal) {
         if (x < 0) {
           // Left swipe.
-          if (this.velocityX < -this.velocityThreshold || x < -this.disregardVelocityThresholdX) {
+          if (this.velocityX < -this.opts.velocityThreshold || x < -this.disregardVelocityThresholdX) {
             this.fire('swipeleft', event);
           }
         } else {
           // Right swipe.
-          if (this.velocityX > this.velocityThreshold || x > this.disregardVelocityThresholdX) {
+          if (this.velocityX > this.opts.velocityThreshold || x > this.disregardVelocityThresholdX) {
             this.fire('swiperight', event);
           }
         }
@@ -161,17 +157,17 @@ export default class TinyGesture {
       if (this.swipedVertical) {
         if (y < 0) {
           // Upward swipe.
-          if (this.velocityY < -this.velocityThreshold || y < -this.disregardVelocityThresholdY) {
+          if (this.velocityY < -this.opts.velocityThreshold || y < -this.disregardVelocityThresholdY) {
             this.fire('swipeup', event);
           }
         } else {
           // Downward swipe.
-          if (this.velocityY > this.velocityThreshold || y > this.disregardVelocityThresholdY) {
+          if (this.velocityY > this.opts.velocityThreshold || y > this.disregardVelocityThresholdY) {
             this.fire('swipedown', event);
           }
         }
       }
-    } else if (Math.abs(x) < this.pressThreshold && Math.abs(y) < this.pressThreshold) {
+    } else if (absX < this.opts.pressThreshold && absY < this.opts.pressThreshold) {
       // Tap.
       if (this.doubleTapWaiting) {
         this.doubleTapWaiting = false;
@@ -179,7 +175,7 @@ export default class TinyGesture {
         this.fire('doubletap', event);
       } else {
         this.doubleTapWaiting = true;
-        this.doubleTapTimer = setTimeout(() => this.doubleTapWaiting = false, this.doubleTapTime);
+        this.doubleTapTimer = setTimeout(() => this.doubleTapWaiting = false, this.opts.doubleTapTime);
         this.fire('tap', event);
       }
     }

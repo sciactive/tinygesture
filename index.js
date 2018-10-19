@@ -35,19 +35,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   gesture.on('swiperight', () => {
-    target.style.transform = 'perspective(1000px) translate3d(2000px, 0, -1000px)';
+    target.style.transform = 'perspective(1000px) translate3d(2000px, 0, 0)';
     setTimeout(() => target.style.transform = null, 1000);
   });
   gesture.on('swipeleft', () => {
-    target.style.transform = 'perspective(1000px) translate3d(-2000px, 0, -1000px)';
+    target.style.transform = 'perspective(1000px) translate3d(-2000px, 0, 0)';
     setTimeout(() => target.style.transform = null, 1000);
   });
   gesture.on('swipeup', () => {
-    target.style.transform = 'perspective(1000px) translate3d(0, -2000px, -1000px)';
+    target.style.transform = 'perspective(1000px) translate3d(0, -2000px, 0)';
     setTimeout(() => target.style.transform = null, 1000);
   });
   gesture.on('swipedown', () => {
-    target.style.transform = 'perspective(1000px) translate3d(0, 2000px, -1000px)';
+    target.style.transform = 'perspective(1000px) translate3d(0, 2000px, 0)';
     setTimeout(() => target.style.transform = null, 1000);
   });
 
