@@ -137,7 +137,7 @@ export default class TinyGesture {
     const absX = Math.abs(x);
     const y = this.touchEndY - this.touchStartY;
     const absY = Math.abs(y);
-    debugger;
+
     if (absX > this.thresholdX || absY > this.thresholdY) {
       this.swipedHorizontal = this.opts.diagonalSwipes ? Math.abs(x / y) <= this.opts.diagonalLimit : absX >= absY && absX > this.thresholdX;
       this.swipedVertical = this.opts.diagonalSwipes ? Math.abs(y / x) <= this.opts.diagonalLimit : absY > absX && absY > this.thresholdY;
