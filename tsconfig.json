@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "ES2020",
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "removeComments": true,
+        "declaration": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "skipLibCheck": true,
+        "importsNotUsedAsValues": "error"
+    }
+}
