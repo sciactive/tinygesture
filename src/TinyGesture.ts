@@ -240,11 +240,11 @@ export interface Options<Element extends HTMLElement = HTMLElement> {
   diagonalLimit: number;
   diagonalSwipes: boolean;
   doubleTapTime: number;
-  disregardVelocityThreshold(a: string, b: TinyGesture<Element>): number;
+  disregardVelocityThreshold(type: "x" | "y", self: TinyGesture<Element>): number;
   longPressTime: number;
   mouseSupport: boolean;
   pressThreshold: number;
-  threshold(a: string, b: TinyGesture<Element>): number;
+  threshold(type: "x" | "y", self: TinyGesture<Element>): number;
   velocityThreshold: number;
 }
 
