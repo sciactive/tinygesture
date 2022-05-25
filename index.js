@@ -1,4 +1,4 @@
-import TinyGesture from './TinyGesture.js';
+import TinyGesture from './dist/TinyGesture.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const target = document.getElementById('target');
@@ -17,7 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       // const zDistance = -(Math.sqrt(Math.pow(gesture.touchMoveX, 2) + Math.pow(gesture.touchMoveY, 2)))+'px';
       target.style.transition = 'background-color ease .3s';
-      target.style.transform = 'perspective(1000px) translate3d('+gesture.touchMoveX+'px, '+gesture.touchMoveY+'px, 0)';
+      target.style.transform =
+        'perspective(1000px) translate3d(' + gesture.touchMoveX + 'px, ' + gesture.touchMoveY + 'px, 0)';
       window.requestAnimationFrame(() => {
         target.style.transition = null;
       });
@@ -36,30 +37,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   gesture.on('swiperight', () => {
     target.style.transform = 'perspective(1000px) translate3d(2000px, 0, 0)';
-    setTimeout(() => target.style.transform = null, 1000);
+    setTimeout(() => (target.style.transform = null), 1000);
   });
   gesture.on('swipeleft', () => {
     target.style.transform = 'perspective(1000px) translate3d(-2000px, 0, 0)';
-    setTimeout(() => target.style.transform = null, 1000);
+    setTimeout(() => (target.style.transform = null), 1000);
   });
   gesture.on('swipeup', () => {
     target.style.transform = 'perspective(1000px) translate3d(0, -2000px, 0)';
-    setTimeout(() => target.style.transform = null, 1000);
+    setTimeout(() => (target.style.transform = null), 1000);
   });
   gesture.on('swipedown', () => {
     target.style.transform = 'perspective(1000px) translate3d(0, 2000px, 0)';
-    setTimeout(() => target.style.transform = null, 1000);
+    setTimeout(() => (target.style.transform = null), 1000);
   });
 
   let tapTimeout;
   gesture.on('tap', () => {
     target.style.transform = 'perspective(1000px) translate3d(0, 0, 100px)';
-    tapTimeout = setTimeout(() => target.style.transform = null, 300);
+    tapTimeout = setTimeout(() => (target.style.transform = null), 300);
   });
   gesture.on('doubletap', () => {
     target.style.transform = 'perspective(1000px) translate3d(0, 0, 400px)';
     clearTimeout(tapTimeout);
-    setTimeout(() => target.style.transform = null, 300);
+    setTimeout(() => (target.style.transform = null), 300);
   });
   gesture.on('longpress', () => {
     bgColor = '#666688';
