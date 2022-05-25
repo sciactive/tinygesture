@@ -1,6 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-class TinyGesture {
+export default class TinyGesture {
     constructor(element, options) {
         this.element = element;
         this.touchStartX = null;
@@ -190,7 +188,6 @@ class TinyGesture {
         }
     }
 }
-exports.default = TinyGesture;
 TinyGesture.defaults = {
     threshold: (type, _self) => Math.max(25, Math.floor(0.15 *
         (type === 'x'

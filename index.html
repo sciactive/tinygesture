@@ -9,6 +9,24 @@
     />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
+    <script type="module">
+      // Check out these files for an example of how to use TinyGesture.js.
+      import Pannable from './DemoPannable.js';
+      import Swipeable from './DemoSwipeable.js';
+      import Tappable from './DemoTappable.js';
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const target = document.getElementById('target');
+
+        Pannable(target);
+        Swipeable(target);
+        Tappable(target, {
+          bgColor: '#666688',
+          color: '#fff',
+        });
+      });
+    </script>
+
     <!-- Open Graph -->
     <meta property="og:site_name" content="TinyGesture.js" />
     <meta property="og:title" content="TinyGesture.js" />
@@ -39,10 +57,10 @@
       #target {
         width: 120px;
         height: 120px;
-        transition: transform ease 0.3s, background-color ease 0.3s;
         transform: translate3d(0, 0, 0);
         z-index: 0;
         background-color: #006688;
+        color: #fff;
       }
     </style>
   </head>
@@ -57,10 +75,7 @@
         class="flex-grow-1 d-flex justify-content-center align-items-center position-relative border border-info m-3"
         style="overflow: hidden"
       >
-        <div
-          class="d-flex justify-content-center align-items-center rounded position-relative text-white text-center"
-          id="target"
-        >
+        <div class="d-flex justify-content-center align-items-center rounded position-relative text-center" id="target">
           <span style="user-select: none">
             Swipe me.<br />
             Tap me.<br />
@@ -75,6 +90,5 @@
         src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"
         alt="Fork me on GitHub"
     /></a>
-    <script type="module" src="index.js"></script>
   </body>
 </html>

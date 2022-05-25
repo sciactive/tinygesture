@@ -2,11 +2,11 @@
   "extends": "@tsconfig/recommended/tsconfig.json",
 
   "compilerOptions": {
+    "module": "ES6",
     "noImplicitAny": true,
     "removeComments": true,
     "sourceMap": true,
     "outDir": "dist",
-    "resolveJsonModule": true,
     "rootDir": "src/",
     "declaration": true
   },

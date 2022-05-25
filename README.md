@@ -157,6 +157,46 @@ gesture.on('longpress', (event) => {
 });
 ```
 
+### Long Press without Tap
+
+If you want to listen for both long press and tap, and distinguish between them, this is how to do it.
+
+```js
+let pressed = false;
+
+// Note: don't use the 'tap' event to detect when the user has finished a long
+// press, because it doesn't always fire.
+gesture.on('tap', () => {
+  // If the user long pressed, don't run the tap handler. This event fires after
+  // the user lifts their finger.
+  if (pressed) {
+    return;
+  }
+  // ... Your tap handling code here.
+});
+
+gesture.on('longpress', () => {
+  // Indicate that this is a long press. This event fires before the user lifts
+  // their finger.
+  pressed = true;
+  // ... Your long press ongoing handling code here.
+});
+
+gesture.on('panend', () => {
+  // This is how you would detect when the user has finished a long press,
+  // because 'panend' will always fire, even if the user has moved their finger
+  // a little after 'longpress' has fired.
+  if (pressed) {
+    // ... Your long press finished handling code here.
+
+    // Make sure to reset pressed after the current event loop.
+    setTimeout(() => {
+      pressed = false;
+    }, 0);
+  }
+});
+```
+
 ### Un-listening to Gesture Events
 
 ```js
