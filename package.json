@@ -7,6 +7,12 @@
   "type": "module",
   "types": "dist/TinyGesture.d.ts",
   "scripts": {
+    "prepare": "husky install && npm run clean && npm run build",
+    "clean": "test -d dist && rm -r dist || true",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "lint:format": "npx prettier --write --ignore-unknown .",
+    "lint:check": "npx prettier --check --ignore-unknown .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,12 +31,19 @@
     "event"
   ],
   "author": "Hunter Perrin <hperrin@gmail.com>",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/sciactive/tinygesture/issues"
   },
   "homepage": "https://sciactive.github.io/tinygesture/",
   "devDependencies": {
+    "@tsconfig/recommended": "^1.0.1",
+    "husky": "^8.0.1",
+    "lint-staged": "^12.4.2",
+    "prettier": "^2.6.2",
     "typescript": "^4.6.2"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   }
 }

@@ -1,4 +1,6 @@
-export default class TinyGesture {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+class TinyGesture {
     constructor(element, options) {
         this.element = element;
         this.touchStartX = null;
@@ -37,24 +39,25 @@ export default class TinyGesture {
         this._onTouchMove = this.onTouchMove.bind(this);
         this._onTouchEnd = this.onTouchEnd.bind(this);
         this.opts = Object.assign({}, TinyGesture.defaults, options);
-        this.element.addEventListener("touchstart", this._onTouchStart, passiveIfSupported);
-        this.element.addEventListener("touchmove", this._onTouchMove, passiveIfSupported);
-        this.element.addEventListener("touchend", this._onTouchEnd, passiveIfSupported);
-        if (this.opts.mouseSupport && !("ontouchstart" in window)) {
-            this.element.addEventListener("mousedown", this._onTouchStart, passiveIfSupported);
-            document.addEventListener("mousemove", this._onTouchMove, passiveIfSupported);
-            document.addEventListener("mouseup", this._onTouchEnd, passiveIfSupported);
+        this.element.addEventListener('touchstart', this._onTouchStart, passiveIfSupported);
+        this.element.addEventListener('touchmove', this._onTouchMove, passiveIfSupported);
+        this.element.addEventListener('touchend', this._onTouchEnd, passiveIfSupported);
+        if (this.opts.mouseSupport && !('ontouchstart' in window)) {
+            this.element.addEventListener('mousedown', this._onTouchStart, passiveIfSupported);
+            document.addEventListener('mousemove', this._onTouchMove, passiveIfSupported);
+            document.addEventListener('mouseup', this._onTouchEnd, passiveIfSupported);
         }
     }
     destroy() {
-        this.element.removeEventListener("touchstart", this._onTouchStart);
-        this.element.removeEventListener("touchmove", this._onTouchMove);
-        this.element.removeEventListener("touchend", this._onTouchEnd);
-        this.element.removeEventListener("mousedown", this._onTouchStart);
-        document.removeEventListener("mousemove", this._onTouchMove);
-        document.removeEventListener("mouseup", this._onTouchEnd);
-        clearTimeout(this.longPressTimer ?? undefined);
-        clearTimeout(this.doubleTapTimer ?? undefined);
+        var _a, _b;
+        this.element.removeEventListener('touchstart', this._onTouchStart);
+        this.element.removeEventListener('touchmove', this._onTouchMove);
+        this.element.removeEventListener('touchend', this._onTouchEnd);
+        this.element.removeEventListener('mousedown', this._onTouchStart);
+        document.removeEventListener('mousemove', this._onTouchMove);
+        document.removeEventListener('mouseup', this._onTouchEnd);
+        clearTimeout((_a = this.longPressTimer) !== null && _a !== void 0 ? _a : undefined);
+        clearTimeout((_b = this.doubleTapTimer) !== null && _b !== void 0 ? _b : undefined);
     }
     on(type, fn) {
         if (this.handlers[type]) {
@@ -80,32 +83,33 @@ export default class TinyGesture {
         }
     }
     onTouchStart(event) {
-        this.thresholdX = this.opts.threshold("x", this);
-        this.thresholdY = this.opts.threshold("y", this);
-        this.disregardVelocityThresholdX = this.opts.disregardVelocityThreshold("x", this);
-        this.disregardVelocityThresholdY = this.opts.disregardVelocityThreshold("y", this);
+        this.thresholdX = this.opts.threshold('x', this);
+        this.thresholdY = this.opts.threshold('y', this);
+        this.disregardVelocityThresholdX = this.opts.disregardVelocityThreshold('x', this);
+        this.disregardVelocityThresholdY = this.opts.disregardVelocityThreshold('y', this);
         this.touchStartX =
-            event.type === "mousedown" ? event.screenX : event.changedTouches[0].screenX;
+            event.type === 'mousedown' ? event.screenX : event.changedTouches[0].screenX;
         this.touchStartY =
-            event.type === "mousedown" ? event.screenY : event.changedTouches[0].screenY;
+            event.type === 'mousedown' ? event.screenY : event.changedTouches[0].screenY;
         this.touchMoveX = null;
         this.touchMoveY = null;
         this.touchEndX = null;
         this.touchEndY = null;
-        this.longPressTimer = setTimeout(() => this.fire("longpress", event), this.opts.longPressTime);
-        this.fire("panstart", event);
+        this.longPressTimer = setTimeout(() => this.fire('longpress', event), this.opts.longPressTime);
+        this.fire('panstart', event);
     }
     onTouchMove(event) {
-        if (event.type === "mousemove" && (!this.touchStartX || this.touchEndX !== null)) {
+        var _a, _b, _c, _d, _e;
+        if (event.type === 'mousemove' && (!this.touchStartX || this.touchEndX !== null)) {
             return;
         }
-        const touchMoveX = (event.type === "mousemove" ? event.screenX : event.changedTouches[0].screenX) -
-            (this.touchStartX ?? 0);
-        this.velocityX = touchMoveX - (this.touchMoveX ?? 0);
+        const touchMoveX = (event.type === 'mousemove' ? event.screenX : event.changedTouches[0].screenX) -
+            ((_a = this.touchStartX) !== null && _a !== void 0 ? _a : 0);
+        this.velocityX = touchMoveX - ((_b = this.touchMoveX) !== null && _b !== void 0 ? _b : 0);
         this.touchMoveX = touchMoveX;
-        const touchMoveY = (event.type === "mousemove" ? event.screenY : event.changedTouches[0].screenY) -
-            (this.touchStartY ?? 0);
-        this.velocityY = touchMoveY - (this.touchMoveY ?? 0);
+        const touchMoveY = (event.type === 'mousemove' ? event.screenY : event.changedTouches[0].screenY) -
+            ((_c = this.touchStartY) !== null && _c !== void 0 ? _c : 0);
+        this.velocityY = touchMoveY - ((_d = this.touchMoveY) !== null && _d !== void 0 ? _d : 0);
         this.touchMoveY = touchMoveY;
         const absTouchMoveX = Math.abs(this.touchMoveX);
         const absTouchMoveY = Math.abs(this.touchMoveY);
@@ -114,29 +118,30 @@ export default class TinyGesture {
         this.swipingDirection =
             absTouchMoveX > absTouchMoveY
                 ? this.swipingHorizontal
-                    ? "horizontal"
-                    : "pre-horizontal"
+                    ? 'horizontal'
+                    : 'pre-horizontal'
                 : this.swipingVertical
-                    ? "vertical"
-                    : "pre-vertical";
+                    ? 'vertical'
+                    : 'pre-vertical';
         if (Math.max(absTouchMoveX, absTouchMoveY) > this.opts.pressThreshold) {
-            clearTimeout(this.longPressTimer ?? undefined);
+            clearTimeout((_e = this.longPressTimer) !== null && _e !== void 0 ? _e : undefined);
         }
-        this.fire("panmove", event);
+        this.fire('panmove', event);
     }
     onTouchEnd(event) {
-        if (event.type === "mouseup" && (!this.touchStartX || this.touchEndX !== null)) {
+        var _a, _b, _c, _d, _e, _f, _g, _h;
+        if (event.type === 'mouseup' && (!this.touchStartX || this.touchEndX !== null)) {
             return;
         }
         this.touchEndX =
-            event.type === "mouseup" ? event.screenX : event.changedTouches[0].screenX;
+            event.type === 'mouseup' ? event.screenX : event.changedTouches[0].screenX;
         this.touchEndY =
-            event.type === "mouseup" ? event.screenY : event.changedTouches[0].screenY;
-        this.fire("panend", event);
-        clearTimeout(this.longPressTimer ?? undefined);
-        const x = this.touchEndX - (this.touchStartX ?? 0);
+            event.type === 'mouseup' ? event.screenY : event.changedTouches[0].screenY;
+        this.fire('panend', event);
+        clearTimeout((_a = this.longPressTimer) !== null && _a !== void 0 ? _a : undefined);
+        const x = this.touchEndX - ((_b = this.touchStartX) !== null && _b !== void 0 ? _b : 0);
         const absX = Math.abs(x);
-        const y = this.touchEndY - (this.touchStartY ?? 0);
+        const y = this.touchEndY - ((_c = this.touchStartY) !== null && _c !== void 0 ? _c : 0);
         const absY = Math.abs(y);
         if (absX > this.thresholdX || absY > this.thresholdY) {
             this.swipedHorizontal = this.opts.diagonalSwipes
@@ -147,25 +152,25 @@ export default class TinyGesture {
                 : absY > absX && absY > this.thresholdY;
             if (this.swipedHorizontal) {
                 if (x < 0) {
-                    if ((this.velocityX ?? 0) < -this.opts.velocityThreshold || x < -this.disregardVelocityThresholdX) {
-                        this.fire("swipeleft", event);
+                    if (((_d = this.velocityX) !== null && _d !== void 0 ? _d : 0) < -this.opts.velocityThreshold || x < -this.disregardVelocityThresholdX) {
+                        this.fire('swipeleft', event);
                     }
                 }
                 else {
-                    if ((this.velocityX ?? 0) > this.opts.velocityThreshold || x > this.disregardVelocityThresholdX) {
-                        this.fire("swiperight", event);
+                    if (((_e = this.velocityX) !== null && _e !== void 0 ? _e : 0) > this.opts.velocityThreshold || x > this.disregardVelocityThresholdX) {
+                        this.fire('swiperight', event);
                     }
                 }
             }
             if (this.swipedVertical) {
                 if (y < 0) {
-                    if ((this.velocityY ?? 0) < -this.opts.velocityThreshold || y < -this.disregardVelocityThresholdY) {
-                        this.fire("swipeup", event);
+                    if (((_f = this.velocityY) !== null && _f !== void 0 ? _f : 0) < -this.opts.velocityThreshold || y < -this.disregardVelocityThresholdY) {
+                        this.fire('swipeup', event);
                     }
                 }
                 else {
-                    if ((this.velocityY ?? 0) > this.opts.velocityThreshold || y > this.disregardVelocityThresholdY) {
-                        this.fire("swipedown", event);
+                    if (((_g = this.velocityY) !== null && _g !== void 0 ? _g : 0) > this.opts.velocityThreshold || y > this.disregardVelocityThresholdY) {
+                        this.fire('swipedown', event);
                     }
                 }
             }
@@ -173,24 +178,25 @@ export default class TinyGesture {
         else if (absX < this.opts.pressThreshold && absY < this.opts.pressThreshold) {
             if (this.doubleTapWaiting) {
                 this.doubleTapWaiting = false;
-                clearTimeout(this.doubleTapTimer ?? undefined);
-                this.fire("doubletap", event);
+                clearTimeout((_h = this.doubleTapTimer) !== null && _h !== void 0 ? _h : undefined);
+                this.fire('doubletap', event);
             }
             else {
                 this.doubleTapWaiting = true;
                 this.doubleTapTimer = setTimeout(() => (this.doubleTapWaiting = false), this.opts.doubleTapTime);
-                this.fire("tap", event);
+                this.fire('tap', event);
             }
         }
     }
 }
+exports.default = TinyGesture;
 TinyGesture.defaults = {
-    threshold: (type, self) => Math.max(25, Math.floor(0.15 *
-        (type === "x"
+    threshold: (type, _self) => Math.max(25, Math.floor(0.15 *
+        (type === 'x'
             ? window.innerWidth || document.body.clientWidth
             : window.innerHeight || document.body.clientHeight))),
     velocityThreshold: 10,
-    disregardVelocityThreshold: (type, self) => Math.floor(0.5 * (type === "x" ? self.element.clientWidth : self.element.clientHeight)),
+    disregardVelocityThreshold: (type, self) => Math.floor(0.5 * (type === 'x' ? self.element.clientWidth : self.element.clientHeight)),
     pressThreshold: 8,
     diagonalSwipes: false,
     diagonalLimit: Math.tan(((45 * 1.5) / 180) * Math.PI),
@@ -200,10 +206,11 @@ TinyGesture.defaults = {
 };
 let passiveIfSupported = false;
 try {
-    window.addEventListener("test", null, Object.defineProperty({}, "passive", {
+    window.addEventListener('test', null, Object.defineProperty({}, 'passive', {
         get: function () {
             passiveIfSupported = { passive: true };
         },
     }));
 }
 catch (err) { }
+//# sourceMappingURL=TinyGesture.js.map

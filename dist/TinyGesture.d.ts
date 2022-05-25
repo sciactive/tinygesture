@@ -43,11 +43,11 @@ export interface Options<Element extends HTMLElement = HTMLElement> {
     diagonalLimit: number;
     diagonalSwipes: boolean;
     doubleTapTime: number;
-    disregardVelocityThreshold(type: "x" | "y", self: TinyGesture<Element>): number;
+    disregardVelocityThreshold(type: 'x' | 'y', self: TinyGesture<Element>): number;
     longPressTime: number;
     mouseSupport: boolean;
     pressThreshold: number;
-    threshold(type: "x" | "y", self: TinyGesture<Element>): number;
+    threshold(type: 'x' | 'y', self: TinyGesture<Element>): number;
     velocityThreshold: number;
 }
 export interface Events {
@@ -66,4 +66,4 @@ export declare type Handler<E> = (event: E) => void;
 export declare type Handlers = {
     [E in keyof Events]: Handler<Events[E]>[];
 };
-export declare type SwipingDirection = "horizontal" | "pre-horizontal" | "vertical" | "pre-vertical";
+export declare type SwipingDirection = 'horizontal' | 'pre-horizontal' | 'vertical' | 'pre-vertical';

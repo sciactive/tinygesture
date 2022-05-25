@@ -19,26 +19,23 @@ import TinyGesture from 'tinygesture';
 const options = {
   // Used to calculate the threshold to consider a movement a swipe. it is
   // passed type of 'x' or 'y'.
-  threshold: (type, self) => Math.max(
-    25,
-    Math.floor(0.15 * (
-      type === 'x'
-        ? window.innerWidth || document.body.clientWidth
-        : window.innerHeight || document.body.clientHeight
-    ))
-  ),
+  threshold: (type, self) =>
+    Math.max(
+      25,
+      Math.floor(
+        0.15 *
+          (type === 'x'
+            ? window.innerWidth || document.body.clientWidth
+            : window.innerHeight || document.body.clientHeight)
+      )
+    ),
   // Minimum velocity the gesture must be moving when the gesture ends to be
   // considered a swipe.
   velocityThreshold: 10,
   // Used to calculate the distance threshold to ignore the gestures velocity
   // and always consider it a swipe.
-  disregardVelocityThreshold: (type, self) => Math.floor(
-    0.5 * (
-      type === 'x'
-        ? self.element.clientWidth
-        : self.element.clientHeight
-    )
-  ),
+  disregardVelocityThreshold: (type, self) =>
+    Math.floor(0.5 * (type === 'x' ? self.element.clientWidth : self.element.clientHeight)),
   // Point at which the pointer moved too much to consider it a tap or longpress
   // gesture.
   pressThreshold: 8,
@@ -48,9 +45,9 @@ const options = {
   // fired.
   diagonalSwipes: false,
   // The degree limit to consider a swipe when diagonalSwipes is true.
-  diagonalLimit: Math.tan(45 * 1.5 / 180 * Math.PI),
+  diagonalLimit: Math.tan(((45 * 1.5) / 180) * Math.PI),
   // Listen to mouse events in addition to touch events. (For desktop support.)
-  mouseSupport: true
+  mouseSupport: true,
 };
 
 const target = document.getElementById('target');
@@ -60,7 +57,7 @@ const gesture = new TinyGesture(target, options);
 ### Listening to Gesture Events
 
 ```js
-gesture.on('panstart', event => {
+gesture.on('panstart', (event) => {
   // Always the original mouse or touch event.
   // This service uses passive listeners, so you can't call
   // event.preventDefault() on any of the events.
@@ -70,7 +67,7 @@ gesture.on('panstart', event => {
   // The (screen) y coordinate of the start of the gesture.
   gesture.touchStartY;
 });
-gesture.on('panmove', event => {
+gesture.on('panmove', (event) => {
   // Everything from panstart, and...
 
   // The amount the gesture has moved in the x direction.
@@ -96,7 +93,7 @@ gesture.on('panmove', event => {
     alert('You are currently swiping left.');
   }
 });
-gesture.on('panend', event => {
+gesture.on('panend', (event) => {
   // Everything from panstart and panmove, and...
 
   // The (screen) x coordinate of the end of the gesture.
@@ -109,7 +106,7 @@ gesture.on('panend', event => {
   // they're based on the last touch move coordinates.
 });
 
-gesture.on('swiperight', event => {
+gesture.on('swiperight', (event) => {
   // The gesture was a right swipe.
 
   // This will always be true for a right swipe.
@@ -118,7 +115,7 @@ gesture.on('swiperight', event => {
   // enough to also be a vertical swipe.
   gesture.swipedVertical;
 });
-gesture.on('swipeleft', event => {
+gesture.on('swipeleft', (event) => {
   // The gesture was a left swipe.
 
   // This will always be true for a left swipe.
@@ -127,7 +124,7 @@ gesture.on('swipeleft', event => {
   // enough to also be a vertical swipe.
   gesture.swipedVertical;
 });
-gesture.on('swipeup', event => {
+gesture.on('swipeup', (event) => {
   // The gesture was an upward swipe.
 
   // This will be true if diagonalSwipes is on and the gesture was diagonal
@@ -136,7 +133,7 @@ gesture.on('swipeup', event => {
   // This will always be true for an upward swipe.
   gesture.swipedVertical;
 });
-gesture.on('swipedown', event => {
+gesture.on('swipedown', (event) => {
   // The gesture was a downward swipe.
 
   // This will be true if diagonalSwipes is on and the gesture was diagonal
@@ -146,16 +143,16 @@ gesture.on('swipedown', event => {
   gesture.swipedVertical;
 });
 
-gesture.on('tap', event => {
+gesture.on('tap', (event) => {
   // The gesture was a tap. Keep in mind, it may have also been a long press.
 });
 
-gesture.on('doubletap', event => {
+gesture.on('doubletap', (event) => {
   // The gesture was a double tap. The 'tap' event will also have been fired on
   // the first tap.
 });
 
-gesture.on('longpress', event => {
+gesture.on('longpress', (event) => {
   // The gesture is currently ongoing, and is now a long press.
 });
 ```
@@ -164,7 +161,7 @@ gesture.on('longpress', event => {
 
 ```js
 // There are two ways to un-listen:
-const callback = event => {};
+const callback = (event) => {};
 const listener = gesture.on('tap', callback);
 // First way.
 listener.cancel();
