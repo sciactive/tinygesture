@@ -8,6 +8,8 @@ Very small gesture recognizer for JavaScript. Swipe, pan, tap, doubletap, and lo
 npm install --save tinygesture
 ```
 
+If you're upgrading from 1.0, the only breaking change in 2.0 is the location of the file. It's now in a "dist" folder, hence the major version change.
+
 ## Usage
 
 ### Constructor and Options
