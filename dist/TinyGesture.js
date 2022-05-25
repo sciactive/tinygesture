@@ -20,7 +20,7 @@ class TinyGesture {
         this.disregardVelocityThresholdY = 0;
         this.swipingHorizontal = false;
         this.swipingVertical = false;
-        this.swipingDirection = undefined;
+        this.swipingDirection = null;
         this.swipedHorizontal = false;
         this.swipedVertical = false;
         this.handlers = {
@@ -95,6 +95,7 @@ class TinyGesture {
         this.touchMoveY = null;
         this.touchEndX = null;
         this.touchEndY = null;
+        this.swipingDirection = null;
         this.longPressTimer = setTimeout(() => this.fire('longpress', event), this.opts.longPressTime);
         this.fire('panstart', event);
     }

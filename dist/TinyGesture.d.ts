@@ -18,7 +18,7 @@ export default class TinyGesture<Element extends HTMLElement = HTMLElement> {
     disregardVelocityThresholdY: number;
     swipingHorizontal: boolean;
     swipingVertical: boolean;
-    swipingDirection?: SwipingDirection;
+    swipingDirection: SwipingDirection | null;
     swipedHorizontal: boolean;
     swipedVertical: boolean;
     handlers: Handlers;

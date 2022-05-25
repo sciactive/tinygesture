@@ -29,7 +29,7 @@ export default class TinyGesture<Element extends HTMLElement = HTMLElement> {
 
   public swipingHorizontal: boolean = false;
   public swipingVertical: boolean = false;
-  public swipingDirection?: SwipingDirection = undefined;
+  public swipingDirection: SwipingDirection | null = null;
   public swipedHorizontal: boolean = false;
   public swipedVertical: boolean = false;
 
@@ -113,6 +113,7 @@ export default class TinyGesture<Element extends HTMLElement = HTMLElement> {
     this.touchMoveY = null;
     this.touchEndX = null;
     this.touchEndY = null;
+    this.swipingDirection = null;
     // Long press.
     this.longPressTimer = setTimeout(() => this.fire('longpress', event), this.opts.longPressTime);
     this.fire('panstart', event);
