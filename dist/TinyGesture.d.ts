@@ -62,8 +62,8 @@ export interface Events {
     swipeup: MouseEvent | TouchEvent;
     tap: MouseEvent | TouchEvent;
 }
-export declare type Handler<E> = (event: E) => void;
-export declare type Handlers = {
+export type Handler<E> = (event: E) => void;
+export type Handlers = {
     [E in keyof Events]: Handler<Events[E]>[];
 };
-export declare type SwipingDirection = 'horizontal' | 'pre-horizontal' | 'vertical' | 'pre-vertical';
+export type SwipingDirection = 'horizontal' | 'pre-horizontal' | 'vertical' | 'pre-vertical';

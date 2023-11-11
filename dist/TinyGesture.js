@@ -1,4 +1,4 @@
-export default class TinyGesture {
+class TinyGesture {
     constructor(element, options) {
         this.element = element;
         this.touchStartX = null;
@@ -202,6 +202,7 @@ TinyGesture.defaults = {
     doubleTapTime: 300,
     mouseSupport: true,
 };
+export default TinyGesture;
 let passiveIfSupported = false;
 try {
     window.addEventListener('test', null, Object.defineProperty({}, 'passive', {
