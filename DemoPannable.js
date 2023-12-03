@@ -27,14 +27,14 @@ export default function Pannable(node) {
       return;
     }
     animationFrame = window.requestAnimationFrame(() => {
-      // Give an indication of whether we've passed the swiping threshold.
-      if (!gesture.swipingDirection.startsWith('pre-')) {
-        node.style.opacity = '0.7';
-      } else {
-        node.style.opacity = '1';
+      if (gesture.scale <= 1.1 && gesture.scale >= 0.9) {
+        // Give an indication of whether we've passed the swiping threshold.
+        if (!gesture.swipingDirection.startsWith('pre-')) {
+          node.style.opacity = '0.7';
+        } else {
+          node.style.opacity = '1';
+        }
       }
-      // Give an indication of how far the user has pulled the target away from its origin.
-      node.style.transform = 'rotate(' + (gesture.touchMoveX / 8 + gesture.touchMoveY / 8) + 'deg)';
       // Update the location to under the user's finger/mouse.
       node.style.left = gesture.touchMoveX + 'px';
       node.style.top = gesture.touchMoveY + 'px';
@@ -45,7 +45,6 @@ export default function Pannable(node) {
   gesture.on('panend', () => {
     animationFrame == null || window.cancelAnimationFrame(animationFrame);
     animationFrame = null;
-    node.style.transform = '';
     // Set left and top transitions so we smoothly animate back to the target's origin.
     addTransition(node, 'left .3s ease');
     addTransition(node, 'top .3s ease');
@@ -61,7 +60,6 @@ export default function Pannable(node) {
         passive: false,
       });
       animationFrame == null || window.cancelAnimationFrame(animationFrame);
-      node.style.transform = '';
       removeTransition(node, 'opacity');
       removeTransition(node, 'left');
       removeTransition(node, 'top');

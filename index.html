@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta
       name="description"
-      content="Very small gesture recognizer for JavaScript. Swipe, pan, tap, doubletap, and longpress."
+      content="Very small gesture recognizer for JavaScript. Swipe, pan, tap, doubletap, longpress, pinch, and rotate."
     />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
@@ -14,6 +14,8 @@
       import Pannable from './DemoPannable.js';
       import Swipeable from './DemoSwipeable.js';
       import Tappable from './DemoTappable.js';
+      import Pinchable from './DemoPinchable.js';
+      import Rotatable from './DemoRotatable.js';
 
       document.addEventListener('DOMContentLoaded', () => {
         const target = document.getElementById('target');
@@ -24,6 +26,8 @@
           bgColor: '#666688',
           color: '#fff',
         });
+        Pinchable(target);
+        Rotatable(target);
       });
     </script>
 
@@ -33,7 +37,7 @@
     <meta property="og:url" content="https://sciactive.github.io/tiny-gesture" />
     <meta
       property="og:description"
-      content="Very small gesture recognizer for JavaScript. Swipe, pan, tap, doubletap, and longpress."
+      content="Very small gesture recognizer for JavaScript. Swipe, pan, tap, doubletap, longpress, pinch, and rotate."
     />
 
     <!-- Bundled Styles -->
@@ -47,23 +51,23 @@
     <style type="text/css">
       html,
       body {
-        overscroll-behavior: none;
-        position: fixed;
         top: 0;
         left: 0;
         height: 100%;
         width: 100%;
       }
       #target {
-        width: 120px;
-        height: 120px;
+        width: 200px;
+        height: 200px;
         transform: translate3d(0, 0, 0);
         z-index: 0;
         background-color: #006688;
         color: #fff;
+        font-size: 20px;
       }
 
       #forkongithub a {
+        display: block;
         background: #000;
         color: #fff;
         text-decoration: none;
@@ -139,7 +143,9 @@
           <span style="user-select: none">
             Swipe me.<br />
             Tap me.<br />
-            Press me.
+            Press me.<br />
+            Pinch me.<br />
+            Rotate me.
           </span>
         </div>
       </div>

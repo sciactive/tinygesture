@@ -1,6 +1,6 @@
 # TinyGesture.js
 
-Very small gesture recognizer for JavaScript. Swipe, pan, tap, doubletap, and longpress.
+Very small gesture recognizer for JavaScript. Swipe, pan, tap, doubletap, longpress, pinch, and rotate.
 
 ## Installation
 
@@ -8,7 +8,8 @@ Very small gesture recognizer for JavaScript. Swipe, pan, tap, doubletap, and lo
 npm install --save tinygesture
 ```
 
-If you're upgrading from 1.0, the only breaking change in 2.0 is the location of the file. It's now in a "dist" folder, hence the major version change.
+- If you're upgrading from v2, the `diagonalLimit` option has changed meaning and there are new events for pinch and rotate. Also TS now exports ES2020 instead of ES6.
+- If you're upgrading from v1, the location of the file has changed. It's now in a "dist" folder, hence the major version change.
 
 ## Usage
 
@@ -157,6 +158,29 @@ gesture.on('doubletap', (event) => {
 
 gesture.on('longpress', (event) => {
   // The gesture is currently ongoing, and is now a long press.
+});
+
+gesture.on('pinch', (event) => {
+  // The gesture is an ongoing pinch.
+
+  // This is the current scale of the pinch. <1 means the user is zooming out.
+  // >1 means the user is zooming in.
+  gesture.scale;
+});
+
+gesture.on('pinchend', (event) => {
+  // The pinch gesture is completed.
+});
+
+gesture.on('rotate', (event) => {
+  // The gesture is an ongoing rotate.
+
+  // This is the current angle of the rotation, in degrees.
+  gesture.rotation;
+});
+
+gesture.on('rotateend', (event) => {
+  // The rotate gesture is completed.
 });
 ```
 

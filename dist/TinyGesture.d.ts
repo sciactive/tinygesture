@@ -1,10 +1,14 @@
 export default class TinyGesture<Element extends HTMLElement = HTMLElement> {
     element: Element;
     opts: Options<Element>;
+    touch1: Touch | null;
+    touch2: Touch | null;
     touchStartX: number | null;
     touchStartY: number | null;
     touchEndX: number | null;
     touchEndY: number | null;
+    touchMove1: Touch | null;
+    touchMove2: Touch | null;
     touchMoveX: number | null;
     touchMoveY: number | null;
     velocityX: number | null;
@@ -21,6 +25,12 @@ export default class TinyGesture<Element extends HTMLElement = HTMLElement> {
     swipingDirection: SwipingDirection | null;
     swipedHorizontal: boolean;
     swipedVertical: boolean;
+    originalDistance: number | null;
+    newDistance: number | null;
+    scale: number | null;
+    originalAngle: number | null;
+    newAngle: number | null;
+    rotation: number | null;
     handlers: Handlers;
     private _onTouchStart;
     private _onTouchMove;
@@ -61,6 +71,10 @@ export interface Events {
     swiperight: MouseEvent | TouchEvent;
     swipeup: MouseEvent | TouchEvent;
     tap: MouseEvent | TouchEvent;
+    pinch: TouchEvent;
+    pinchend: TouchEvent;
+    rotate: TouchEvent;
+    rotateend: TouchEvent;
 }
 export type Handler<E> = (event: E) => void;
 export type Handlers = {

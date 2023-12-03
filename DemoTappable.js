@@ -9,7 +9,7 @@ export default function Tappable(
   options = {
     bgColor: 'transparent',
     color: 'black',
-  }
+  },
 ) {
   const gesture = new TinyGesture(node);
   let tapTimeout;
@@ -22,8 +22,8 @@ export default function Tappable(
 
   // Note: don't use the 'tap' event to detect when the user has finished a long press, because it doesn't always fire.
   gesture.on('tap', () => {
-    // If the user long pressed, don't run the tap handler. This event fires after the user lifts their finger.
-    if (pressed) {
+    // If the user long pressed or pinched, don't run the tap handler. This event fires after the user lifts their finger.
+    if (pressed || gesture.scale > 1.1 || gesture.scale < 0.9) {
       return;
     }
     // Embiggen.
@@ -40,6 +40,10 @@ export default function Tappable(
   gesture.on('longpress', () => {
     // Indicate that this is a long press. This event fires before the user lifts their finger.
     pressed = true;
+    // If the user pinched, don't run the handler.
+    if (gesture.scale > 1.1 || gesture.scale < 0.9) {
+      return;
+    }
     // Change colors.
     node.style.backgroundColor = options.bgColor;
     node.style.color = options.color;
