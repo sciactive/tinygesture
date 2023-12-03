@@ -29,6 +29,8 @@
     "pan",
     "tap",
     "longpress",
+    "pinch",
+    "rotate",
     "event"
   ],
   "author": "Hunter Perrin <hperrin@gmail.com>",
