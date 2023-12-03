@@ -1,6 +1,6 @@
 {
   "name": "tinygesture",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "description": "Very small gesture recognizer for JavaScript. Swipe, pan, tap, doubletap, and longpress.",
   "main": "dist/TinyGesture.js",
   "browser": "dist/TinyGesture.js",
