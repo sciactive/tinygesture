@@ -5,8 +5,9 @@ import { addTransition, removeTransition } from './DemoTransitions.js';
  * This function can be used as a Svelte action.
  */
 export default function Swipeable(node) {
-  const gesture = new TinyGesture(node);
-  let timeout;
+  const gesture = new TinyGesture(node, { diagonalSwipes: true });
+  let goRaf;
+  let backTimeout;
   const preventDefault = (event) => {
     event.preventDefault();
   };
@@ -16,26 +17,39 @@ export default function Swipeable(node) {
   // Don't allow the page to scroll when the target is first pressed.
   node.addEventListener('touchstart', preventDefault, { passive: false });
 
+  let xpos = 0;
+  let ypos = 0;
+
+  function doTransform() {
+    node.style.transform = `perspective(1000px) translate3d(${xpos}px, ${ypos}px, 0)`;
+    clearTimeout(backTimeout);
+    backTimeout = setTimeout(() => {
+      xpos = 0;
+      ypos = 0;
+      node.style.transform = '';
+    }, 1000);
+  }
+
   // When the target is swiped, fling it really far in that direction before coming back to origin.
   gesture.on('swiperight', () => {
-    node.style.transform = 'perspective(1000px) translate3d(2000px, 0, 0)';
-    clearTimeout(timeout);
-    setTimeout(() => (node.style.transform = ''), 1000);
+    xpos = 2000;
+    cancelAnimationFrame(goRaf);
+    goRaf = requestAnimationFrame(doTransform);
   });
   gesture.on('swipeleft', () => {
-    node.style.transform = 'perspective(1000px) translate3d(-2000px, 0, 0)';
-    clearTimeout(timeout);
-    setTimeout(() => (node.style.transform = ''), 1000);
+    xpos = -2000;
+    cancelAnimationFrame(goRaf);
+    goRaf = requestAnimationFrame(doTransform);
   });
   gesture.on('swipeup', () => {
-    node.style.transform = 'perspective(1000px) translate3d(0, -2000px, 0)';
-    clearTimeout(timeout);
-    setTimeout(() => (node.style.transform = ''), 1000);
+    ypos = -2000;
+    cancelAnimationFrame(goRaf);
+    goRaf = requestAnimationFrame(doTransform);
   });
   gesture.on('swipedown', () => {
-    node.style.transform = 'perspective(1000px) translate3d(0, 2000px, 0)';
-    clearTimeout(timeout);
-    setTimeout(() => (node.style.transform = ''), 1000);
+    ypos = 2000;
+    cancelAnimationFrame(goRaf);
+    goRaf = requestAnimationFrame(doTransform);
   });
 
   return {
@@ -43,7 +57,8 @@ export default function Swipeable(node) {
       node.removeEventListener('touchstart', preventDefault, {
         passive: false,
       });
-      clearTimeout(timeout);
+      cancelAnimationFrame(goRaf);
+      clearTimeout(backTimeout);
       node.style.transform = '';
       removeTransition(node, 'transform');
       gesture.destroy();

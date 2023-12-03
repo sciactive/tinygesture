@@ -46,11 +46,14 @@ export default class TinyGesture<Element extends HTMLElement = HTMLElement> {
     longpress: [],
   };
 
-  private _onTouchStart: typeof this['onTouchStart'] = this.onTouchStart.bind(this);
-  private _onTouchMove: typeof this['onTouchMove'] = this.onTouchMove.bind(this);
-  private _onTouchEnd: typeof this['onTouchEnd'] = this.onTouchEnd.bind(this);
+  private _onTouchStart: (typeof this)['onTouchStart'] = this.onTouchStart.bind(this);
+  private _onTouchMove: (typeof this)['onTouchMove'] = this.onTouchMove.bind(this);
+  private _onTouchEnd: (typeof this)['onTouchEnd'] = this.onTouchEnd.bind(this);
 
-  constructor(public element: Element, options?: Partial<Options<Element>>) {
+  constructor(
+    public element: Element,
+    options?: Partial<Options<Element>>,
+  ) {
     this.opts = Object.assign({}, TinyGesture.defaults, options);
     this.element.addEventListener('touchstart', this._onTouchStart, passiveIfSupported);
     this.element.addEventListener('touchmove', this._onTouchMove, passiveIfSupported);
@@ -166,23 +169,38 @@ export default class TinyGesture<Element extends HTMLElement = HTMLElement> {
     const absX = Math.abs(x);
     const y = this.touchEndY - (this.touchStartY ?? 0);
     const absY = Math.abs(y);
+    const distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    const absDistance = Math.abs(distance);
+    const diagonal = absY / absX;
 
-    if (absX > this.thresholdX || absY > this.thresholdY) {
-      this.swipedHorizontal = this.opts.diagonalSwipes
-        ? Math.abs(x / y) <= this.opts.diagonalLimit
-        : absX >= absY && absX > this.thresholdX;
-      this.swipedVertical = this.opts.diagonalSwipes
-        ? Math.abs(y / x) <= this.opts.diagonalLimit
-        : absY > absX && absY > this.thresholdY;
+    if (
+      absX > this.thresholdX ||
+      absY > this.thresholdY ||
+      (this.opts.diagonalSwipes && (absDistance > this.thresholdX || absDistance > this.thresholdY))
+    ) {
+      this.swipedHorizontal = absX > this.thresholdX || (this.opts.diagonalSwipes && absDistance > this.thresholdX);
+      this.swipedVertical = absY > this.thresholdY || (this.opts.diagonalSwipes && absDistance > this.thresholdY);
+      if (
+        !this.opts.diagonalSwipes ||
+        diagonal < Math.tan(((45 - this.opts.diagonalLimit) * Math.PI) / 180) ||
+        diagonal > Math.tan(((45 + this.opts.diagonalLimit) * Math.PI) / 180)
+      ) {
+        if (absX >= absY) {
+          this.swipedVertical = false;
+        }
+        if (absY > absX) {
+          this.swipedHorizontal = false;
+        }
+      }
       if (this.swipedHorizontal) {
         if (x < 0) {
           // Left swipe.
-          if ((this.velocityX ?? 0) < -this.opts.velocityThreshold || x < -this.disregardVelocityThresholdX) {
+          if ((this.velocityX ?? 0) < -this.opts.velocityThreshold || distance < -this.disregardVelocityThresholdX) {
             this.fire('swipeleft', event);
           }
         } else {
           // Right swipe.
-          if ((this.velocityX ?? 0) > this.opts.velocityThreshold || x > this.disregardVelocityThresholdX) {
+          if ((this.velocityX ?? 0) > this.opts.velocityThreshold || distance > this.disregardVelocityThresholdX) {
             this.fire('swiperight', event);
           }
         }
@@ -190,12 +208,12 @@ export default class TinyGesture<Element extends HTMLElement = HTMLElement> {
       if (this.swipedVertical) {
         if (y < 0) {
           // Upward swipe.
-          if ((this.velocityY ?? 0) < -this.opts.velocityThreshold || y < -this.disregardVelocityThresholdY) {
+          if ((this.velocityY ?? 0) < -this.opts.velocityThreshold || distance < -this.disregardVelocityThresholdY) {
             this.fire('swipeup', event);
           }
         } else {
           // Downward swipe.
-          if ((this.velocityY ?? 0) > this.opts.velocityThreshold || y > this.disregardVelocityThresholdY) {
+          if ((this.velocityY ?? 0) > this.opts.velocityThreshold || distance > this.disregardVelocityThresholdY) {
             this.fire('swipedown', event);
           }
         }
@@ -222,15 +240,15 @@ export default class TinyGesture<Element extends HTMLElement = HTMLElement> {
           0.15 *
             (type === 'x'
               ? window.innerWidth || document.body.clientWidth
-              : window.innerHeight || document.body.clientHeight)
-        )
+              : window.innerHeight || document.body.clientHeight),
+        ),
       ),
     velocityThreshold: 10,
     disregardVelocityThreshold: (type, self: TinyGesture) =>
       Math.floor(0.5 * (type === 'x' ? self.element.clientWidth : self.element.clientHeight)),
     pressThreshold: 8,
     diagonalSwipes: false,
-    diagonalLimit: Math.tan(((45 * 1.5) / 180) * Math.PI),
+    diagonalLimit: 15,
     longPressTime: 500,
     doubleTapTime: 300,
     mouseSupport: true,
@@ -280,6 +298,6 @@ try {
       get: function () {
         passiveIfSupported = { passive: true };
       },
-    })
+    }),
   );
 } catch (err) {}

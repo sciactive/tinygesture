@@ -28,8 +28,8 @@ const options = {
         0.15 *
           (type === 'x'
             ? window.innerWidth || document.body.clientWidth
-            : window.innerHeight || document.body.clientHeight)
-      )
+            : window.innerHeight || document.body.clientHeight),
+      ),
     ),
   // Minimum velocity the gesture must be moving when the gesture ends to be
   // considered a swipe.
@@ -46,8 +46,9 @@ const options = {
   // If false, whichever direction the pointer moved more will be the only swipe
   // fired.
   diagonalSwipes: false,
-  // The degree limit to consider a swipe when diagonalSwipes is true.
-  diagonalLimit: Math.tan(((45 * 1.5) / 180) * Math.PI),
+  // The degree limit to consider a diagonal swipe when diagonalSwipes is true.
+  // It's calculated as 45deg±diagonalLimit.
+  diagonalLimit: 15,
   // Listen to mouse events in addition to touch events. (For desktop support.)
   mouseSupport: true,
 };

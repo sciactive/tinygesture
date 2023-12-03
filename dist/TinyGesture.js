@@ -142,33 +142,44 @@ class TinyGesture {
         const absX = Math.abs(x);
         const y = this.touchEndY - ((_c = this.touchStartY) !== null && _c !== void 0 ? _c : 0);
         const absY = Math.abs(y);
-        if (absX > this.thresholdX || absY > this.thresholdY) {
-            this.swipedHorizontal = this.opts.diagonalSwipes
-                ? Math.abs(x / y) <= this.opts.diagonalLimit
-                : absX >= absY && absX > this.thresholdX;
-            this.swipedVertical = this.opts.diagonalSwipes
-                ? Math.abs(y / x) <= this.opts.diagonalLimit
-                : absY > absX && absY > this.thresholdY;
+        const distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        const absDistance = Math.abs(distance);
+        const diagonal = absY / absX;
+        if (absX > this.thresholdX ||
+            absY > this.thresholdY ||
+            (this.opts.diagonalSwipes && (absDistance > this.thresholdX || absDistance > this.thresholdY))) {
+            this.swipedHorizontal = absX > this.thresholdX || (this.opts.diagonalSwipes && absDistance > this.thresholdX);
+            this.swipedVertical = absY > this.thresholdY || (this.opts.diagonalSwipes && absDistance > this.thresholdY);
+            if (!this.opts.diagonalSwipes ||
+                diagonal < Math.tan(((45 - this.opts.diagonalLimit) * Math.PI) / 180) ||
+                diagonal > Math.tan(((45 + this.opts.diagonalLimit) * Math.PI) / 180)) {
+                if (absX >= absY) {
+                    this.swipedVertical = false;
+                }
+                if (absY > absX) {
+                    this.swipedHorizontal = false;
+                }
+            }
             if (this.swipedHorizontal) {
                 if (x < 0) {
-                    if (((_d = this.velocityX) !== null && _d !== void 0 ? _d : 0) < -this.opts.velocityThreshold || x < -this.disregardVelocityThresholdX) {
+                    if (((_d = this.velocityX) !== null && _d !== void 0 ? _d : 0) < -this.opts.velocityThreshold || distance < -this.disregardVelocityThresholdX) {
                         this.fire('swipeleft', event);
                     }
                 }
                 else {
-                    if (((_e = this.velocityX) !== null && _e !== void 0 ? _e : 0) > this.opts.velocityThreshold || x > this.disregardVelocityThresholdX) {
+                    if (((_e = this.velocityX) !== null && _e !== void 0 ? _e : 0) > this.opts.velocityThreshold || distance > this.disregardVelocityThresholdX) {
                         this.fire('swiperight', event);
                     }
                 }
             }
             if (this.swipedVertical) {
                 if (y < 0) {
-                    if (((_f = this.velocityY) !== null && _f !== void 0 ? _f : 0) < -this.opts.velocityThreshold || y < -this.disregardVelocityThresholdY) {
+                    if (((_f = this.velocityY) !== null && _f !== void 0 ? _f : 0) < -this.opts.velocityThreshold || distance < -this.disregardVelocityThresholdY) {
                         this.fire('swipeup', event);
                     }
                 }
                 else {
-                    if (((_g = this.velocityY) !== null && _g !== void 0 ? _g : 0) > this.opts.velocityThreshold || y > this.disregardVelocityThresholdY) {
+                    if (((_g = this.velocityY) !== null && _g !== void 0 ? _g : 0) > this.opts.velocityThreshold || distance > this.disregardVelocityThresholdY) {
                         this.fire('swipedown', event);
                     }
                 }
@@ -197,7 +208,7 @@ TinyGesture.defaults = {
     disregardVelocityThreshold: (type, self) => Math.floor(0.5 * (type === 'x' ? self.element.clientWidth : self.element.clientHeight)),
     pressThreshold: 8,
     diagonalSwipes: false,
-    diagonalLimit: Math.tan(((45 * 1.5) / 180) * Math.PI),
+    diagonalLimit: 15,
     longPressTime: 500,
     doubleTapTime: 300,
     mouseSupport: true,
