@@ -283,7 +283,7 @@ export default class TinyGesture<Element extends HTMLElement = HTMLElement> {
         if (this.swipedHorizontal) {
           if (x < 0) {
             // Left swipe.
-            if ((this.velocityX ?? 0) < -this.opts.velocityThreshold || distance < -this.disregardVelocityThresholdX) {
+            if ((this.velocityX ?? 0) < -this.opts.velocityThreshold || distance > this.disregardVelocityThresholdX) {
               this.fire('swipeleft', event);
             }
           } else {
@@ -296,7 +296,7 @@ export default class TinyGesture<Element extends HTMLElement = HTMLElement> {
         if (this.swipedVertical) {
           if (y < 0) {
             // Upward swipe.
-            if ((this.velocityY ?? 0) < -this.opts.velocityThreshold || distance < -this.disregardVelocityThresholdY) {
+            if ((this.velocityY ?? 0) < -this.opts.velocityThreshold || distance > this.disregardVelocityThresholdY) {
               this.fire('swipeup', event);
             }
           } else {
