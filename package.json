@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sciactive/tinygesture.git"
+    "url": "https://forge.sciactive.com/sciactive/tinygesture.git"
   },
   "keywords": [
     "gesture",
@@ -33,10 +33,10 @@
     "rotate",
     "event"
   ],
-  "author": "Hunter Perrin <hperrin@gmail.com>",
+  "author": "Hunter Perrin <hperrin@port87.com>",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/sciactive/tinygesture/issues"
+    "url": "https://forge.sciactive.com/sciactive/tinygesture/issues"
   },
   "homepage": "https://sciactive.github.io/tinygesture/",
   "devDependencies": {
